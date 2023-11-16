@@ -7,23 +7,27 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'errors.dart';
 import 'storage.dart';
 
+/// Functio that checks if the device is connected to the internet
 Future<bool> isConnected() async {
   var connectivityResult = await (Connectivity().checkConnectivity());
   return connectivityResult == ConnectivityResult.mobile ||
       connectivityResult == ConnectivityResult.wifi;
 }
 
+/// Class that handles the communication with the backend server
 class Backend {
   String host = "<backend_host>";
   Map<String, String> headers = {"User-Agent": "<app_agent>"};
 
   Backend();
 
+  /// Function that checks if the app's selector files are up to date
   Future<ErrorControl> checkVersions() async {
     bool success = false;
     String msg = "";
     int errorCode = Errors.UNEXPECTED_ERROR;
 
+    // If the device is not connected to the internet, return NetworkConnectionError
     if (!await isConnected()) {
       return ErrorControl(
           success: false,
@@ -32,29 +36,35 @@ class Backend {
     }
 
     try {
-      var response =
+      // Get the versions from the backend
+      http.Response response =
           await http.get(Uri.parse("$host/versions"), headers: headers);
 
+      // If the response is successful, check if the versions are up to date
       if (response.statusCode == 200) {
         Map data = jsonDecode(response.body);
 
-        String versionsKey = "versions";
-        String warningsKey = "show_warnings";
-        String msgKey = "messages";
+        final String versionsKey = "versions";
+        final String warningsKey = "show_warnings";
+        final String msgKey = "messages";
 
         if (data.containsKey(versionsKey)) {
           List versions = data[versionsKey];
 
+          // Get the stored versions
           List<dynamic> storedVersions = await SemesterStorage.getVersions();
 
-          // Store the version on first app launch
+          // If storedVersions is empty, store the version (first app launch)
           if (storedVersions.isEmpty) {
             await SemesterStorage.storeVersions(versions);
             storedVersions = versions;
+
+            // Iterate over the versions and fetch the files
             for (var v in storedVersions.indexed) {
               await fetchFile(v.$2["id"]);
             }
           } else {
+            // Iterate over the versions and fetch the files if the version is newer
             for (var v in storedVersions.indexed) {
               if (versions[v.$1]["version_number"] > v.$2["version_number"]) {
                 await fetchFile(v.$2["id"]);
@@ -67,6 +77,7 @@ class Backend {
           msg = utf8.decode(data[msgKey][0].codeUnits);
           errorCode = Errors.SERVER_MANUAL_WARNING;
         }
+        // If the response is not successful, return InvalidApiResponse
       } else {
         success = false;
         errorCode = Errors.INVALID_API_RESPONSE;
@@ -76,6 +87,7 @@ class Backend {
       errorCode = Errors.SERVER_TIMEOUT;
     }
 
+    // If the version check was not successful, report the error to the backend
     if (!success) {
       this.reportErrorToEndpoint(
           className: (this).toString(), errorCode: errorCode, errorMsg: msg);
@@ -84,18 +96,25 @@ class Backend {
     return ErrorControl(success: success, message: msg, errorCode: errorCode);
   }
 
+  /// Function that fetches the selector file (corresponding to the given key) from the backend
   Future<void> fetchFile(String key) async {
-    var response =
+    // Get the file from the backend
+    http.Response response =
         await http.get(Uri.parse("$host/getfile/$key"), headers: headers);
+
+    final String identifiersKey = "identifiers";
 
     if (response.statusCode == 200) {
       Map data = jsonDecode(response.body);
-      if (data.containsKey("identifiers")) {
-        await SemesterStorage.storeFile(key, data["identifiers"]);
+
+      // If the file contains identifiers, store them
+      if (data.containsKey(identifiersKey)) {
+        await SemesterStorage.storeFile(key, data[identifiersKey]);
       }
+
+    // If the response is not successful, report the error to the backend
     } else {
-      Backend b = Backend();
-      b.reportErrorToEndpoint(
+      this.reportErrorToEndpoint(
           className: (this).toString(),
           errorCode: Errors.API_REQUEST_FAILED,
           errorMsg: "(${response.statusCode}) ${response.body}");
@@ -103,27 +122,36 @@ class Backend {
     }
   }
 
+  /// Function that sends a heartbeat to the backend.
+  /// The heartbeat is sent once a day, if the app is opened.
   Future<void> heartBeat() async {
     final String endpoint = '$host/heartbeat';
+    // Check if the heartbeat was already sent today
     bool isSentToday = await SemesterStorage.checkHeartBeatDate();
+
     if (!isSentToday) {
       try {
         await http.get(
           Uri.parse(endpoint),
         );
       } catch (e) {
-        print('Failed to send heartbeat due to: $e');
+        //print('Failed to send heartbeat due to: $e');
       }
       SemesterStorage.storeLastHeartBeat();
     }
   }
 
+  /// Function that sends an error report to the backend
   void reportErrorToEndpoint(
       {required int errorCode,
       required String errorMsg,
       required String className}) async {
     final String endpoint = '$host/reporterror';
+
+    // Get the app version
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
+
+    // Prepare the request body
     final Map<String, dynamic> payload = {
       'error_code': errorCode,
       'content': {
@@ -132,6 +160,7 @@ class Backend {
       },
       'version': packageInfo.version
     };
+
     try {
       await http.post(
         Uri.parse(endpoint),
@@ -144,6 +173,7 @@ class Backend {
   }
 }
 
+/// Class that represents an error
 class ErrorControl {
   const ErrorControl(
       {required this.success,
