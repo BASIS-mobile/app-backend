@@ -7,7 +7,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'errors.dart';
 import 'storage.dart';
 
-/// Functio that checks if the device is connected to the internet
+/// Function that checks if the device is connected to the internet
 Future<bool> isConnected() async {
   var connectivityResult = await (Connectivity().checkConnectivity());
   return connectivityResult == ConnectivityResult.mobile ||
