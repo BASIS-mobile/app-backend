@@ -8,12 +8,15 @@ import 'pages/subpages/error.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarBrightness: Brightness.light,
   ));
-  Backend backend = Backend();
-  backend.heartBeat();
-  ErrorControl eC = await backend.checkVersions();
+
+  Backend backend = Backend(); // Initialize backend
+  backend.heartBeat(); // Send heartbeat
+  ErrorControl eC = await backend.checkVersions(); // Check versions
+
   runApp(MyApp(
     versionControl: eC,
   ));
@@ -21,6 +24,7 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key, required this.versionControl});
+  // Root widget of the app
 
   final ErrorControl versionControl;
 
@@ -35,7 +39,7 @@ class MyApp extends StatelessWidget {
         ),
         home: DefaultTextStyle(
             style: GoogleFonts.exo2(),
-            child: versionControl.success
+            child: versionControl.success // Check if version check was successful
                 ? const HomePage()
                 : ErrorPage(versionControl: versionControl)));
   }
