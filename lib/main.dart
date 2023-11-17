@@ -1,4 +1,4 @@
-import 'package:basis/data/backend.dart';
+import 'package:basis/core/backend.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -44,3 +44,4 @@ class MyApp extends StatelessWidget {
                 : ErrorPage(versionControl: versionControl)));
   }
 }
+
