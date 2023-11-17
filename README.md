@@ -14,7 +14,7 @@ The unofficial app of the BASIS lecture directory of the University of Bonn.
 | --- | --- | --- |
 -->
 
-## About the App
+## Motivation
 
 Hey! We, a team of students from the University of Bonn, know the struggle with the unwieldy and old-fashioned BASIS website.
 That's why we created the BASIS app - a simple, stylish and user-friendly solution to quickly navigate through the course catalog.
@@ -30,4 +30,37 @@ That's why we created the BASIS app - a simple, stylish and user-friendly soluti
 ### By students, for students
 
 - We built it ourselves because we know exactly what's annoying. Expect intuitive operation, clearly structured information and a design that doesn't come from the Stone Age.
+
+
+## About this repository
+
+Our app is built with [Flutter](https://flutter.dev/), a cross-platform framework for building mobile apps. This repository contains the source code of the app's backend, which is written in [Dart](https://dart.dev/). Until now, only the backend is open source, but we are planning to open source the frontend as well.
+
+## Project structure
+
+A typical Flutter project looks like this:
+
+```
+app_name            (root project folder)
+    ios/            (iOS app configuration)
+    android/        (Android app configuration)
+    assets/         (Static files like images)
+    lib/            (Dart code)
+    pubspec.yaml    (Dependency and framework configuration file)
+```
+Now let's take a closer look at our `lib/` folder:
+
+```
+lib
+    main.dart               (Entry point of the app)
+    core/                   (Core logic of the app)
+        data/               (Data and storage models)
+            errors.dart     (Error models)
+            storage.dart    (Storage models)
+        backend.dart        (Backend API)
+        basis_backend.dart  (BASIS HTML parser logic)
+        basis.dart          (BASIS server communication logic) 
+    
+```
+
 
