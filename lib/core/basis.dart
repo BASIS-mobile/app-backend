@@ -4,7 +4,7 @@ import 'package:azlistview/azlistview.dart';
 import 'package:flutter/services.dart';
 
 import 'basis_backend.dart';
-import 'storage.dart';
+import 'data/storage.dart';
 
 /// Function that returns a random user agent from a list of selected ones
 String getRandomUserAgent() {

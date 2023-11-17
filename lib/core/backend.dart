@@ -4,8 +4,8 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:http/http.dart' as http;
 import 'package:package_info_plus/package_info_plus.dart';
 
-import 'errors.dart';
-import 'storage.dart';
+import 'data/errors.dart';
+import 'data/storage.dart';
 
 /// Function that checks if the device is connected to the internet
 Future<bool> isConnected() async {
