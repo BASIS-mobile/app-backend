@@ -3,7 +3,7 @@
 
 The unofficial app of the BASIS lecture directory of the University of Bonn.
 
-<a href="https://play.google.com/store/apps/details?id=com.miguelcz.stmg_app"><img src="https://img.shields.io/badge/Version-1.0.1-green?style=for-the-badge" alt="version"></a>
+<a href="https://play.google.com/store/apps/details?id=com.miguelcz.basis"><img src="https://img.shields.io/badge/Version-1.0.1-green?style=for-the-badge" alt="version"></a>
 <a href=""><img src="https://img.shields.io/badge/rating-5/5-green?style=for-the-badge" alt="rating"/></a>
 
 <a href="https://play.google.com/store/apps/details?id=com.miguelcz.basis"><img alt="Jetzt bei Google Play" src="https://play.google.com/intl/en_us/badges/static/images/badges/de_badge_web_generic.png" height="60"/></a>
