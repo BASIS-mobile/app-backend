@@ -14,5 +14,20 @@ The unofficial app of the BASIS lecture directory of the University of Bonn.
 | --- | --- | --- |
 -->
 
-## Info
+## About the App
+
+Hey! We, a team of students from the University of Bonn, know the struggle with the unwieldy and old-fashioned BASIS website.
+That's why we created the BASIS app - a simple, stylish and user-friendly solution to quickly navigate through the course catalog.
+
+### Quick overview
+
+- All the information you need, compact and no frills.
+
+### Always up to date
+
+- Choose your semester and keep an eye on all courses and events. No mess, no stress.
+
+### By students, for students
+
+- We built it ourselves because we know exactly what's annoying. Expect intuitive operation, clearly structured information and a design that doesn't come from the Stone Age.
 
