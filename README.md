@@ -38,7 +38,7 @@ Our app is built with [Flutter](https://flutter.dev/), a cross-platform framewor
 
 ## Project structure
 
-A typical Flutter project looks like this:
+A typical Flutter project roughly looks like this:
 
 ```
 app_name            (root project folder)
@@ -63,4 +63,21 @@ lib
     
 ```
 
+### Core logic
+
+- `backend.dart`:
+    
+    Because the BASIS website has no open API, we have to parse the HTML response from the BASIS server. In order to extract the data from the HTML response, the App needs to know the HTML selectors of the elements in the pages of the BASIS website of our interest. That's why we decided to host a API server that serves the latest HTML selector data (in JSON format). 
+
+    The `Backend` class is responsible of the communication between the App client and our API server.
+
+
+    
+
+<!--
+Our API serves the HTML selector data of the various pages of the BASIS website in JSON format. These are needed in order to parse the HTML response from the BASIS server. For this, we use the `BasisBackend` class, which is defined in `basis_backend.dart`. This class contains all the logic to parse the HTML response from the BASIS server and convert it to JSON.
+
+Because the BASIS website has no open API, we have to parse the HTML response from the BASIS server. For this, we use the `BasisBackend` class, which is defined in `basis_backend.dart`. This class contains all the logic to parse the HTML response from the BASIS server and convert it to JSON.
+
+-->
 
