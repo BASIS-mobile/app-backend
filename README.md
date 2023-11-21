@@ -72,7 +72,7 @@ lib
     The `Backend` class is responsible of the communication between the App client and our API server.
 
 
-    
+_Oh! This README seems to be incomplete! We are still working on this, thanks for your patience :)_
 
 <!--
 Our API serves the HTML selector data of the various pages of the BASIS website in JSON format. These are needed in order to parse the HTML response from the BASIS server. For this, we use the `BasisBackend` class, which is defined in `basis_backend.dart`. This class contains all the logic to parse the HTML response from the BASIS server and convert it to JSON.
