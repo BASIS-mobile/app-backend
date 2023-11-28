@@ -41,26 +41,25 @@ Our app is built with [Flutter](https://flutter.dev/), a cross-platform framewor
 A typical Flutter project roughly looks like this:
 
 ```
-app_name            (root project folder)
-    ios/            (iOS app configuration)
-    android/        (Android app configuration)
-    assets/         (Static files like images)
-    lib/            (Dart code)
-    pubspec.yaml    (Dependency and framework configuration file)
+app_name/            (root project folder)
+├── ios/             (iOS app configuration)
+├── android/         (Android app configuration)
+├── assets/          (Static files like images)
+├── lib/             (Dart code)
+└── pubspec.yaml     (Dependency and framework configuration file)
 ```
 Now let's take a closer look at our `lib/` folder:
 
 ```
-lib
-    main.dart               (Entry point of the app)
-    core/                   (Core logic of the app)
-        data/               (Data and storage models)
-            errors.dart     (Error models)
-            storage.dart    (Storage models)
-        backend.dart        (Backend API)
-        basis_backend.dart  (BASIS HTML parser logic)
-        basis.dart          (BASIS server communication logic) 
-    
+lib/
+└── main.dart               (Entry point of the app)
+└── core/                   (Core logic of the app)
+    ├── data/               (Data and storage models)
+    │   ├── errors.dart     (Error models)
+    │   └── storage.dart    (Storage models)
+    ├── backend.dart        (Backend API)
+    ├── basis_backend.dart  (BASIS HTML parser logic)
+    └── basis.dart          (BASIS server communication logic)
 ```
 
 ### Core logic
