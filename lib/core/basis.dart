@@ -23,16 +23,16 @@ String getRandomUserAgent() {
 
 /// Class that handles the communication with the BASIS server
 class Basis {
-  String host = "https://basis.uni-bonn.de/qisserver";
+  final String host = "https://basis.uni-bonn.de/qisserver";
   Map<String, String> cookies = {};
   Map<String, String> headers = {"User-Agent": getRandomUserAgent()};
 
   /// Function that returns the data from a given file name
   Future<List<dynamic>> getData(
-      {required String fileName,
-      required String href,
-      List<String> excludeTitles = const [],
-      bool dedupe = true}) async {
+      {required final String fileName,
+      required final String href,
+      final List<String> excludeTitles = const [],
+      final bool dedupe = true}) async {
     final Uint8List urlContent =
         await fetchUrlContent(href); // Fetch BASIS html
 
@@ -47,7 +47,7 @@ class Basis {
 
   /// Funtion that returns all courses
   Future<List<dynamic>> getAlleVeranstaltungen(
-      {String href = "", List<String> excludeTitles = const []}) async {
+      {String href = "", final List<String> excludeTitles = const []}) async {
     if (href.isEmpty) {
       // If no href is given, use the current semester
       href = await SemesterStorage.getCurrentSemesterHref();
@@ -59,7 +59,7 @@ class Basis {
 
   /// Funtion that returns the headers of the table
   Future<List<dynamic>> getTabellenHeaders(
-      {String href = "", List<String> excludeTitles = const []}) async {
+      {final String href = "", final List<String> excludeTitles = const []}) async {
     return getData(
         fileName: "termine_headers",
         href: href,
@@ -69,7 +69,7 @@ class Basis {
 
   /// Funtion that returns the contents of the table
   Future<List<dynamic>> getTabellenContent(
-      {String href = "", List<String> excludeTitles = const []}) async {
+      {final String href = "", final List<String> excludeTitles = const []}) async {
     return getData(
         fileName: "termine_content",
         href: href,
@@ -79,7 +79,7 @@ class Basis {
 
   // Funtion that returns the list of semesters
   Future<List<dynamic>> getSemesterList() async {
-    String url = "$host/rds?state=user&type=0";
+    final String url = "$host/rds?state=user&type=0";
 
     final Uint8List urlContent = await fetchUrlContent(url);
 
