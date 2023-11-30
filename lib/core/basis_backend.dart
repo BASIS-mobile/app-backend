@@ -33,11 +33,18 @@ Map<String, dynamic> getAttributes(
 }
 
 /// Funtion to fetch the html of a given url
-Future<Uint8List> fetchUrlContent(String url) async {
-  var headers = {HttpHeaders.userAgentHeader: "<user-agent>"};
+Future<Uint8List> fetchUrlContent({
+  required final String url,
+  final int acceptHttpCode = 200,
+  final requestBody = Null,
+  Map<String, String> initialHeaders = const {},
+}) async {
+  initialHeaders[HttpHeaders.userAgentHeader] = "<user-agent>";
 
-  final http.Response response =
-      await http.get(Uri.parse(url), headers: headers);
+  final http.Response response = requestBody
+      ? await http.post(Uri.parse(url),
+          body: requestBody, headers: initialHeaders)
+      : await http.get(Uri.parse(url), headers: initialHeaders);
 
   if (response.statusCode != 200) {
     throw HttpException('Request failed with status: ${response.statusCode}.');
