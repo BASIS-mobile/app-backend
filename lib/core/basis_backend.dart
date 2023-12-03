@@ -33,7 +33,7 @@ Map<String, dynamic> getAttributes(
 }
 
 /// Funtion to fetch the html of a given url
-Future<Uint8List> fetchUrlContent({
+Future<http.Response> fetchUrlContent({
   required final String url,
   final int acceptHttpCode = 200,
   final requestBody = Null,
@@ -49,7 +49,7 @@ Future<Uint8List> fetchUrlContent({
   if (response.statusCode != 200) {
     throw HttpException('Request failed with status: ${response.statusCode}.');
   }
-  return response.bodyBytes;
+  return response;
 }
 
 /// Funtion to interpret the json selector file and parse the html

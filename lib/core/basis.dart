@@ -1,5 +1,7 @@
+import 'dart:io';
 import 'dart:math';
 
+import 'package:http/http.dart' as http;
 import 'package:azlistview/azlistview.dart';
 import 'package:flutter/services.dart';
 
@@ -27,20 +29,24 @@ class Basis {
   Map<String, String> cookies = {};
   Map<String, String> headers = {"User-Agent": getRandomUserAgent()};
 
+  final String loginPageParams = "?state=wlogin&login=in&breadCrumbSource=";
+  final String loginPostParams =
+      "?state=user&type=1&category=auth.login&re=last&startpage=portal.vm";
+
   /// Function that returns the data from a given file name
   Future<List<dynamic>> getData(
       {required final String fileName,
       required final String href,
       final List<String> excludeTitles = const [],
       final bool dedupe = true}) async {
-    final Uint8List urlContent =
-        await fetchUrlContent(href); // Fetch BASIS html
+    final http.Response urlContent =
+        await fetchUrlContent(url: href); // Fetch BASIS html
 
     final Map<String, dynamic> fileContent =
         await SemesterStorage.getFile(fileName); // Get saved json selector file
 
     // Interpret the json selector file and parse the html
-    List<dynamic> data = await interpretJson(fileContent, urlContent,
+    List<dynamic> data = await interpretJson(fileContent, urlContent.bodyBytes,
         excludeTitles: excludeTitles, doRemoveDuplicates: dedupe);
     return data;
   }
@@ -59,7 +65,8 @@ class Basis {
 
   /// Funtion that returns the headers of the table
   Future<List<dynamic>> getTabellenHeaders(
-      {final String href = "", final List<String> excludeTitles = const []}) async {
+      {final String href = "",
+      final List<String> excludeTitles = const []}) async {
     return getData(
         fileName: "termine_headers",
         href: href,
@@ -69,7 +76,8 @@ class Basis {
 
   /// Funtion that returns the contents of the table
   Future<List<dynamic>> getTabellenContent(
-      {final String href = "", final List<String> excludeTitles = const []}) async {
+      {final String href = "",
+      final List<String> excludeTitles = const []}) async {
     return getData(
         fileName: "termine_content",
         href: href,
@@ -81,13 +89,43 @@ class Basis {
   Future<List<dynamic>> getSemesterList() async {
     final String url = "$host/rds?state=user&type=0";
 
-    final Uint8List urlContent = await fetchUrlContent(url);
+    final http.Response urlContent = await fetchUrlContent(url: url);
 
     final Map<String, dynamic> fileContent =
         await SemesterStorage.getFile("home");
-    List<dynamic> data = await interpretJson(fileContent, urlContent);
+    List<dynamic> data = await interpretJson(fileContent, urlContent.bodyBytes);
 
     return data;
+  }
+
+  void login(
+      {required final String uniId, required final String password}) async {
+    final String url = "$host/rds?";
+    final Map<String, String> body = {
+      "username": uniId,
+      "password": password,
+      "submit": "Anmelden"
+    };
+    final String cookieHeaderName = "Set-Cookie";
+
+    Map<String, String> headers = {
+      "Conten-Type": "application/x-www-form-urlencoded"
+    };
+
+    final http.Response urlContent = await fetchUrlContent(
+        url: url + loginPostParams,
+        requestBody: body,
+        acceptHttpCode: 302,
+        initialHeaders: headers);
+    final Map<String, String> urlHeaders = urlContent.headers;
+
+    if (urlHeaders.containsKey(cookieHeaderName)) {
+      String loginCookie = urlHeaders[cookieHeaderName] ?? "";
+      if (loginCookie.isEmpty) {
+        throw HttpException("Cookie not found");
+      }
+      this.cookies = {"Cookies": loginCookie};
+    }
   }
 }
 
